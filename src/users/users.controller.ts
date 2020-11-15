@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Put, Param, Post, Delete } from '@nestjs/common';
 import {
     ApiOperation,
     ApiResponse,
@@ -17,7 +17,7 @@ export class UsersController {
     @ApiResponse({ status: 200,type: UserDto })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     async create(@Body() createUserDto: UserDto): Promise<UserDto> {
-        return this.usersService.create(createUserDto);
+        return await this.usersService.create(createUserDto) as UserDto;
     }
 
     @Get()
@@ -26,7 +26,7 @@ export class UsersController {
         type: [UserDto]
     })
     async findAll(): Promise<UserDto[]> {
-        return this.usersService.findAll();
+        return await this.usersService.findAll() as UserDto[];
     }
 
     @Get(':id')
@@ -39,4 +39,24 @@ export class UsersController {
         return await this.usersService.findById(id) as UserDto;
     }
 
+    @Put(':id')
+    @ApiResponse({
+        status: 200,
+        description: 'update user by Id',
+        type: UserDto,
+    })
+    async update(
+      @Param('id') id: string,
+      @Body() userDto: UserDto): Promise<UserDto> {
+        return await this.usersService.update(id, userDto) as UserDto;
+    }
+
+    @Delete(':id')
+    @ApiResponse({
+        status: 200,
+        description: 'delete user by Id',
+    })
+    async delete(@Param('id') id: string) {
+        return this.usersService.delete(id);
+    }
 }
