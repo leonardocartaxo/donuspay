@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
 import { UserCreateOrUpdateDto } from './userDto';
 import { HttpStatus } from '@nestjs/common';
 
-describe('Test UsersController', () => {
+describe('Test UsersService', () => {
   const mongodb = new MongoMemoryServer();
 
   let service: UsersService;
-  let controller: UsersController;
 
   beforeEach(async () => {
     await mongodb.stop();
@@ -24,11 +22,9 @@ describe('Test UsersController', () => {
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
       ],
       providers: [UsersService],
-      controllers: [UsersController],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    controller = module.get<UsersController>(UsersController);
   });
 
   afterEach(async () => {
@@ -40,14 +36,14 @@ describe('Test UsersController', () => {
   });
 
   it('POST /users ', async () => {
-    const userDto = await controller.create(userMock1);
+    const userDto = await service.create(userMock1);
     expect(userDto.name).toEqual(userMock1.name);
   });
 
   it('POST /users - unique cpf', async () => {
     try {
-      await controller.create(userMock1);
-      await controller.create(userMock1);
+      await service.create(userMock1);
+      await service.create(userMock1);
     } catch (e) {
       expect(e.status).toEqual(HttpStatus.BAD_REQUEST)
       expect(e.message).toContain('duplicate key error');
@@ -55,39 +51,39 @@ describe('Test UsersController', () => {
   });
 
   it('GET /users', async () => {
-    await controller.create(userMock1);
-    await controller.create(userMock2);
+    await service.create(userMock1);
+    await service.create(userMock2);
 
-    const users = await controller.findAll();
+    const users = await service.findAll();
 
     expect(users.length).toEqual(2)
   });
 
   it('GET /users/{id}', async () => {
-    const createdUser = await controller.create(userMock1);
+    const createdUser = await service.create(userMock1);
 
-    const foundUser = await controller.findOne(createdUser._id)
+    const foundUser = await service.findById(createdUser._id)
 
     expect(foundUser._id).toEqual(createdUser._id)
   });
 
   it('PUT /users/{id}', async () => {
-    const createdUser = await controller.create(userMock1);
+    const createdUser = await service.create(userMock1);
 
     const newName = "John"
     createdUser.name = newName;
 
-    const updatedUser = await controller.update(createdUser._id, createdUser)
+    const updatedUser = await service.update(createdUser._id, createdUser)
 
     expect(updatedUser.name).toEqual(newName)
   });
 
   it('DELETE /users/{id}', async () => {
-    const createdUser = await controller.create(userMock1);
+    const createdUser = await service.create(userMock1);
 
-    await controller.delete(createdUser._id)
+    await service.delete(createdUser._id)
 
-    const users = await controller.findAll();
+    const users = await service.findAll();
 
     expect(users.length).toEqual(0)
   });

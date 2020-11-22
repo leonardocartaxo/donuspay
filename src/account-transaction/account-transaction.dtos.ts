@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../users/user.schema';
-import { Tax, AccountTransactionType } from './account-transaction.schema';
+import { AccountTransactionType, Tax } from './account-transaction.schema';
 
 export class AccountTransactionDto {
   @ApiProperty()

@@ -3,9 +3,9 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountTransactionService } from './account-transaction.service';
 import {
   AccountDepositTransactionDto,
-  AccountTransactionCreateOrUpdateDto,
   AccountTransactionDto,
-  AccountTransferTransactionDto, AccountWithDrawlTransactionDto,
+  AccountTransferTransactionDto,
+  AccountWithDrawlTransactionDto,
 } from './account-transaction.dtos';
 
 @ApiTags('account transactions')
@@ -14,16 +14,6 @@ export class AccountTransactionController {
   constructor(
     private readonly accountTransactionsService: AccountTransactionService
   ) {}
-
-  @Post()
-  @ApiOperation({ summary: 'Create accountTransaction' })
-  @ApiResponse({ status: 200,type: AccountTransactionDto })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async create(
-    @Body() createAccountTransactionDto: AccountTransactionCreateOrUpdateDto
-  ): Promise<AccountTransactionDto> {
-    return await this.accountTransactionsService.create(createAccountTransactionDto) as AccountTransactionDto;
-  }
 
   @Post('/transfer')
   @ApiOperation({ summary: 'Create accountTransaction' })

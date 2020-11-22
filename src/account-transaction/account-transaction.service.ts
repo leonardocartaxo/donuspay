@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
@@ -10,8 +10,8 @@ import {
 } from './account-transaction.schema';
 import {
   AccountDepositTransactionDto,
-  AccountTransactionCreateOrUpdateDto,
-  AccountTransactionDto, AccountTransferTransactionDto,
+  AccountTransactionDto,
+  AccountTransferTransactionDto,
 } from './account-transaction.dtos';
 import { UsersService } from '../users/users.service';
 import { AccountBalancesService } from '../account-balances/account-balances.service';
@@ -52,26 +52,6 @@ export class AccountTransactionService {
     });
   }
 
-  async create(createAccountTransactionDto: AccountTransactionCreateOrUpdateDto): Promise<AccountTransactionDto> {
-    try {
-      const accountTransaction: AccountTransaction ={
-        toUser: Types.ObjectId(createAccountTransactionDto.toUserId),
-        fromUser: createAccountTransactionDto.fromUserId
-          ? Types.ObjectId(createAccountTransactionDto.fromUserId)
-          : null,
-        value: createAccountTransactionDto.value,
-        transactionType: createAccountTransactionDto.transactionType
-      };
-
-      return await this.handleAccountTransaction(accountTransaction);
-    } catch (e) {
-      throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
-        message: e.message,
-      }, HttpStatus.BAD_REQUEST);
-    }
-  }
-
   async findById(id: string): Promise<AccountTransaction> {
     return this.accountTransactionModel.findById(id);
   };
@@ -79,19 +59,6 @@ export class AccountTransactionService {
   private getNewAccountTransactionModel(accountTransaction: AccountTransaction){
     return new this.accountTransactionModel(accountTransaction);
   };
-
-  private async handleAccountTransaction(accountTransaction: AccountTransaction) {
-    switch (accountTransaction.transactionType) {
-      case AccountTransactionType.transfer:
-        return await this.handleTransfer(accountTransaction);
-      case AccountTransactionType.deposit:
-        return await this.handleDeposit(accountTransaction);
-      case AccountTransactionType.withdraw:
-        return await this.handleWithdraw(accountTransaction);
-      default:
-        throw Error('invalid transaction type');
-    }
-  }
 
   private async handleTransfer(accountTransaction: AccountTransaction): Promise<AccountTransactionDto> {
     const accountTransactionModel = new this.accountTransactionModel(accountTransaction);

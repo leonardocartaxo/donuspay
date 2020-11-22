@@ -1,11 +1,7 @@
-import { Body, Controller, Get, Put, Param, Post, Delete } from '@nestjs/common';
-import {
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { UserCreateOrUpdateDto, UserDtos } from './user.dtos';
+import { UserCreateOrUpdateDto, UserDto } from './userDto';
 
 @ApiTags('users')
 @Controller('users')
@@ -14,29 +10,29 @@ export class UsersController {
 
     @Post()
     @ApiOperation({ summary: 'Create user' })
-    @ApiResponse({ status: 200, type: UserDtos })
+    @ApiResponse({ status: 200, type: UserDto })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    async create(@Body() createUserDto: UserCreateOrUpdateDto): Promise<UserDtos> {
-        return await this.usersService.create(createUserDto) as UserDtos;
+    async create(@Body() createUserDto: UserCreateOrUpdateDto): Promise<UserDto> {
+        return await this.usersService.create(createUserDto) as UserDto;
     }
 
     @Get()
     @ApiResponse({
         status: 200,
-        type: [UserDtos]
+        type: [UserDto]
     })
-    async findAll(): Promise<UserDtos[]> {
-        return await this.usersService.findAll() as UserDtos[];
+    async findAll(): Promise<UserDto[]> {
+        return await this.usersService.findAll() as UserDto[];
     }
 
     @Get(':id')
     @ApiResponse({
         status: 200,
         description: 'find user by Id',
-        type: UserDtos,
+        type: UserDto,
     })
-    async findOne(@Param('id') id: string): Promise<UserDtos> {
-        return await this.usersService.findById(id) as UserDtos;
+    async findOne(@Param('id') id: string): Promise<UserDto> {
+        return await this.usersService.findById(id) as UserDto;
     }
 
     @Put(':id')
@@ -47,8 +43,8 @@ export class UsersController {
     })
     async update(
       @Param('id') id: string,
-      @Body() userDto: UserCreateOrUpdateDto): Promise<UserDtos> {
-        return await this.usersService.update(id, userDto) as UserDtos;
+      @Body() userDto: UserCreateOrUpdateDto): Promise<UserDto> {
+        return await this.usersService.update(id, userDto) as UserDto;
     }
 
     @Delete(':id')

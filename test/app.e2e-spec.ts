@@ -5,17 +5,15 @@ import { AppModule } from '../src/app.module';
 import { AccountTransactionModule } from '../src/account-transaction/account-transaction.module';
 import { UsersModule } from '../src/users/users.module';
 import { AccountBalancesModule } from '../src/account-balances/account-balances.module';
-import { UserCreateOrUpdateDto, UserDtos } from '../src/users/user.dtos';
+import { UserCreateOrUpdateDto, UserDto } from '../src/users/userDto';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   AccountDepositTransactionDto,
-  AccountTransactionCreateOrUpdateDto,
   AccountTransactionDto,
   AccountTransferTransactionDto,
   AccountWithDrawlTransactionDto,
 } from '../src/account-transaction/account-transaction.dtos';
-import { AccountTransactionType } from '../src/account-transaction/account-transaction.schema';
 import { AccountBalance } from '../src/account-balances/account-balances.schema';
 
 describe('AppController (e2e)', () => {
@@ -60,7 +58,7 @@ describe('AppController (e2e)', () => {
 
     response = await request(app.getHttpServer()).get('/users');
     expect(response.status).toEqual(200);
-    const users = response.body as UserDtos[];
+    const users = response.body as UserDto[];
     expect(users.length).toEqual(1);
   });
 
@@ -113,28 +111,13 @@ describe('AppController (e2e)', () => {
     console.log(user1Balances);
   });
 
-  it('POST /account-transactions', async () => {
-    const user1 = await createUser(userMock1);
-
-    const requestBody: AccountTransactionCreateOrUpdateDto = {
-      value: 100,
-      toUserId: user1._id,
-      transactionType: AccountTransactionType.deposit
-    }
-
-    let response = await request(app.getHttpServer())
-      .post('/account-transactions')
-      .send(requestBody);
-    expect(response.status).toEqual(201);
-  });
-
-  async function createUser(userMock: UserCreateOrUpdateDto): Promise<UserDtos> {
+  async function createUser(userMock: UserCreateOrUpdateDto): Promise<UserDto> {
     let response = await request(app.getHttpServer())
       .post('/users/')
       .send(userMock);
     expect(response.status).toEqual(201);
 
-    return response.body as UserDtos;
+    return response.body as UserDto;
   }
 
   async function transfer(fromUserId: string, toUserId: string, value: number): Promise<AccountTransactionDto> {
