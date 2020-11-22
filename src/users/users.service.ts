@@ -1,16 +1,22 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schemas/user.schema';
-import { UserDto } from './dto/user.dto';
+import { User, UserDocument } from './user.schema';
+import { UserCreateOrUpdateDto } from './user.dtos';
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-    async create(createUserDto: UserDto): Promise<User> {
-        const createdUser = new this.userModel(createUserDto);
-        return createdUser.save();
+    async create(createUserDto: UserCreateOrUpdateDto): Promise<User> {
+        try {
+            const createdUser = new this.userModel(createUserDto);
+            return await createdUser.save();
+        } catch (error) {
+            if (error?.name === 'MongoError' && error?.code === 11000)
+                throw new BadRequestException(error.message);
+            else throw error;
+        }
     }
 
     async findById(id: string): Promise<User> {
@@ -18,14 +24,11 @@ export class UsersService {
     }
 
     async findAll(): Promise<User[]> {
-        return this.userModel.find().exec();
+        return this.userModel.find();
     }
 
-    async update(id: string, userDto: UserDto): Promise<User> {
-        return this.userModel.findByIdAndUpdate(
-          userDto._id, userDto,
-          {new: true}
-          );
+    async update(id: string, userDto: UserCreateOrUpdateDto): Promise<User> {
+        return this.userModel.findByIdAndUpdate(id, userDto,{new: true});
     }
 
     async delete(id: string): Promise<User> {

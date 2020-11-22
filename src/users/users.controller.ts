@@ -5,7 +5,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { UserDto } from './dto/user.dto';
+import { UserCreateOrUpdateDto, UserDtos } from './user.dtos';
 
 @ApiTags('users')
 @Controller('users')
@@ -14,41 +14,41 @@ export class UsersController {
 
     @Post()
     @ApiOperation({ summary: 'Create user' })
-    @ApiResponse({ status: 200,type: UserDto })
+    @ApiResponse({ status: 200, type: UserDtos })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    async create(@Body() createUserDto: UserDto): Promise<UserDto> {
-        return await this.usersService.create(createUserDto) as UserDto;
+    async create(@Body() createUserDto: UserCreateOrUpdateDto): Promise<UserDtos> {
+        return await this.usersService.create(createUserDto) as UserDtos;
     }
 
     @Get()
     @ApiResponse({
         status: 200,
-        type: [UserDto]
+        type: [UserDtos]
     })
-    async findAll(): Promise<UserDto[]> {
-        return await this.usersService.findAll() as UserDto[];
+    async findAll(): Promise<UserDtos[]> {
+        return await this.usersService.findAll() as UserDtos[];
     }
 
     @Get(':id')
     @ApiResponse({
         status: 200,
         description: 'find user by Id',
-        type: UserDto,
+        type: UserDtos,
     })
-    async findOne(@Param('id') id: string): Promise<UserDto> {
-        return await this.usersService.findById(id) as UserDto;
+    async findOne(@Param('id') id: string): Promise<UserDtos> {
+        return await this.usersService.findById(id) as UserDtos;
     }
 
     @Put(':id')
     @ApiResponse({
         status: 200,
         description: 'update user by Id',
-        type: UserDto,
+        type: UserCreateOrUpdateDto,
     })
     async update(
       @Param('id') id: string,
-      @Body() userDto: UserDto): Promise<UserDto> {
-        return await this.usersService.update(id, userDto) as UserDto;
+      @Body() userDto: UserCreateOrUpdateDto): Promise<UserDtos> {
+        return await this.usersService.update(id, userDto) as UserDtos;
     }
 
     @Delete(':id')
