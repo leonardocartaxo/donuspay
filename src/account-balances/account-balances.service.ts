@@ -19,15 +19,15 @@ export class AccountBalancesService {
       {
         user: Types.ObjectId(userId)
       })
-      .sort({created_at: 1}).exec();
+      .sort({ created_at: 1 });
   }
 
   async getLastById(userId: string): Promise<AccountBalance> {
-    return this.getLastByObjectId(Types.ObjectId(userId));
+    return await this.getLastByObjectId(Types.ObjectId(userId));
   }
 
   async getLastByObjectId(userId: Types.ObjectId): Promise<AccountBalance> {
-    return this.balanceDocumentModel.findOne(
+    return await this.balanceDocumentModel.findOne(
       {
         user: userId
       })

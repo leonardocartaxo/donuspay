@@ -16,7 +16,7 @@ export class AccountTransactionController {
   ) {}
 
   @Post('/transfer')
-  @ApiOperation({ summary: 'Create accountTransaction' })
+  @ApiOperation({ summary: 'Transfer money between users' })
   @ApiResponse({ status: 200, type: AccountTransactionDto })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transfer(
@@ -26,7 +26,7 @@ export class AccountTransactionController {
   }
 
   @Post('/deposit')
-  @ApiOperation({ summary: 'Create accountTransaction' })
+  @ApiOperation({ summary: 'Deposit money to one user' })
   @ApiResponse({ status: 200, type: AccountDepositTransactionDto })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async deposit(
@@ -36,7 +36,7 @@ export class AccountTransactionController {
   }
 
   @Post('/withdraw')
-  @ApiOperation({ summary: 'Create accountTransaction' })
+  @ApiOperation({ summary: 'Withdraw money to one user' })
   @ApiResponse({ status: 200, type: AccountWithDrawlTransactionDto })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async withdraw(
@@ -46,6 +46,7 @@ export class AccountTransactionController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Find one accountTransaction by id' })
   @ApiResponse({
     status: 200,
     description: 'find accountTransaction by Id',

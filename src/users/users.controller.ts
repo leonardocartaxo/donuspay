@@ -17,6 +17,7 @@ export class UsersController {
     }
 
     @Get()
+    @ApiOperation({ summary: 'Get all users' })
     @ApiResponse({
         status: 200,
         type: [UserDto]
@@ -26,9 +27,9 @@ export class UsersController {
     }
 
     @Get(':id')
+    @ApiOperation({ summary: 'Find one user by id' })
     @ApiResponse({
         status: 200,
-        description: 'find user by Id',
         type: UserDto,
     })
     async findOne(@Param('id') id: string): Promise<UserDto> {
@@ -36,9 +37,9 @@ export class UsersController {
     }
 
     @Put(':id')
+    @ApiOperation({ summary: 'Update one user by id' })
     @ApiResponse({
         status: 200,
-        description: 'update user by Id',
         type: UserCreateOrUpdateDto,
     })
     async update(
@@ -48,6 +49,7 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'Delete one user by id' })
     @ApiResponse({
         status: 200,
         description: 'delete user by Id',
