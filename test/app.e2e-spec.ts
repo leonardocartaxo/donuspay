@@ -108,7 +108,6 @@ describe('AppController (e2e)', () => {
 
     expect(user1Balances).not.toBeNull();
     expect(user2Balances).not.toBeNull();
-    console.log(user1Balances);
   });
 
   async function createUser(userMock: UserCreateOrUpdateDto): Promise<UserDto> {

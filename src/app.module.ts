@@ -6,7 +6,8 @@ import { UsersModule } from './users/users.module';
 import { AccountTransactionModule } from './account-transaction/account-transaction.module';
 import { AccountBalancesModule } from './account-balances/account-balances.module';
 
-process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost/donuspay';
+process.env.DB_HOST = process.env.DB_HOST || `localhost`;
+process.env.MONGO_URI = process.env.MONGO_URI || `mongodb://${process.env.DB_HOST}/donuspay`;
 
 @Module({
   imports: [
