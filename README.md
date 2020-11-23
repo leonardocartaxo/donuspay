@@ -11,7 +11,6 @@ A pay app prototype for this  <a href="https://github.com/ztech-company/donus-co
 
 ### Run using Docker
 ```bash
-$ npm install
 $ docker-compose up --build
 ``` 
 
@@ -26,6 +25,7 @@ $ npm start
 $ npm install
 $ npm test
 ``` 
+make sure you have a mongodb running on localhost:27017
 
 ### Run end to end tests using Npm
 ```bash
