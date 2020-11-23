@@ -1,7 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountBalancesService } from './account-balances.service';
-import { AccountBalance } from './account-balances.schema';
 import { AccountBalanceDto, IAccountBalanceFilter } from './account-balances.dtos';
 
 @ApiTags('account-balances')
@@ -15,7 +14,7 @@ export class AccountBalancesController {
   @ApiResponse({
     status: 200,
     description: 'Get all balances from one user',
-    type: [AccountBalance],
+    type: [AccountBalanceDto],
   })
   async find(@Query() query: IAccountBalanceFilter): Promise<AccountBalanceDto[]> {
     return await this.accountBalancesService.getAllByUserId(query.userId) as AccountBalanceDto[];
