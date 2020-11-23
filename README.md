@@ -5,6 +5,7 @@ A pay app prototype for this  <a href="https://github.com/ztech-company/donus-co
 - NodeJs backend written in Typescript
 - Using architecture of <a href="http://nodejs.com" target="blank">Nestjs</a> 
 - Swagger documentation
+- MongoDB
 - Integration tests
 - End to end tests
 - Docker componentization
